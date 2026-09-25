@@ -1,0 +1,42 @@
+bundle:
+  name: weather_etl
+
+workspace:
+  host: https://dbc-ce84dea3-6bb9.cloud.databricks.com
+
+variables:
+  notebook_path:
+    default: /Users/rmukherjee1205@gmail.com/weather_etl
+
+resources:
+  jobs:
+    weather_etl_daily:
+      name: weather_etl_daily
+      tasks:
+        - task_key: ingest
+          notebook_task:
+            notebook_path: ${var.notebook_path}/01_ingest
+        - task_key: transform
+          depends_on:
+            - task_key: ingest
+          notebook_task:
+            notebook_path: ${var.notebook_path}/02_transform
+        - task_key: aggregate
+          depends_on:
+            - task_key: transform
+          notebook_task:
+            notebook_path: ${var.notebook_path}/03_aggregate
+      schedule:
+        quartz_cron_expression: "0 0 7 * * ?"
+        timezone_id: "UTC"
+        pause_status: PAUSED
+      email_notifications:
+        on_failure:
+          - rmukherjee1205@gmail.com
+
+targets:
+  dev:
+    mode: production
+    default: true
+    workspace:
+      root_path: /Workspace/Users/rmukherjee1205@gmail.com/.bundle/${bundle.name}/${bundle.target}

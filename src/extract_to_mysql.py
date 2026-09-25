@@ -15,6 +15,7 @@ CITIES = {
     "Tokyo": (35.6762, 139.6503),
     "Sydney": (-33.8688, 151.2093),
     "Mumbai": (19.0760, 72.8777),
+    "Kolkata": (22.5726, 88.3639),
 }
 API_URL = "https://api.open-meteo.com/v1/forecast"
 HOURLY = ["temperature_2m", "relative_humidity_2m", "precipitation", "wind_speed_10m"]
